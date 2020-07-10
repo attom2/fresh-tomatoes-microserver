@@ -1,7 +1,6 @@
 {
   "name": "fresh-tomatoes-microserver",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "expres": "0.0.5",
     "express": "^4.17.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/attom2/fresh-tomatoes-microserver.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/attom2/fresh-tomatoes-microserver/issues"
+  },
+  "homepage": "https://github.com/attom2/fresh-tomatoes-microserver#readme",
+  "description": ""
 }
