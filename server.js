@@ -6,8 +6,8 @@ const { request, response } = require('express');
 app.locals.allComments = {
 	comments: [
 		{ 475430: [		
-			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', date: 1519211811670},
-			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 32, comment: 'This movie was awesome. I love Leo.', user_name: 'Dennis', date: 1519211811670},
+			{user_id: 41, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Clark', date: 1519211811670},
 			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', date: 1519211811670}
 		]},
 		{ 338762: [		
@@ -97,6 +97,31 @@ app.get("/api/v1/comments/:movie_id", (request, response) => {
 
 	response.status(200).json(foundMovie);
 });
+
+app.post("/api/v1/comments/:movie_id", (request, response) => {
+	const {movie_id, user_id, user_name, comment} = request.body;
+	const movieID = parseInt(movie_id);
+	const date = Date.now();
+	const addedMovie = { user_id, comment, user_name, date };
+
+	for (let requiredParameter of ['comment', 'user_id', 'user_name', 'movie_id']) {
+		if (!request.body[requiredParameter]) {
+			return response.status(422).send({
+				error: `Expected format: {user_id: <integer>, comment: <string>, user_name: <string>, movie_id: <integer>}. Missing a required parameter of ${requiredParameter}!`
+			})
+		}
+	}
+
+	const foundMovie = app.locals.allComments.comments.find(movie => {
+		const movieKey = parseInt(Object.keys(movie)[0])
+		return movieKey === movieID
+	});
+
+	const foundMovieValue = Object.values(foundMovie);
+	foundMovieValue.push(addedMovie);
+
+	return response.status(200).json(addedMovie);
+}) //setup if no movie comments exist yet, create the movie key + array value...
 
 app.listen(app.get('port'), () => {
     console.log(`We are now listening on port ${app.get('port')}`)
