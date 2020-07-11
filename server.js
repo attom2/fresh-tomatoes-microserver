@@ -6,8 +6,8 @@ const { request, response } = require('express');
 app.locals.allComments = {
 	comments: [
 		{ 475430: [		
-			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', date: 1519211811670},
-			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 32, comment: 'This movie was awesome. I love Leo.', user_name: 'Dennis', date: 1519211811670},
+			{user_id: 41, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Clark', date: 1519211811670},
 			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', date: 1519211811670}
 		]},
 		{ 338762: [		
@@ -69,7 +69,7 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 			})
 		}
 	}
-	
+
 	const foundMovie = app.locals.allComments.comments.find(movie => {
 		const movieKey = parseInt(Object.keys(movie)[0])
 		return movieKey === movieID
