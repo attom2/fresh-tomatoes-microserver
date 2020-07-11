@@ -20,22 +20,31 @@ app.locals.allComments = {
 
 app.locals.test = []
 app.locals.usersFavorites = [
-    {userID: 60, favorites:[475430]},
-    {userID: 10, favorites:[603]}
-] 
+  { user_id: 60, movie_ids: [475430, 451184, 554993] },
+  { user_id: 10, movie_ids: [603] },
+]; 
 app.use(express.json());
 app.use(cors());
 
 app.set('port', process.env.POST || 3001);
 
-app.get("/api/v1/favorites", (request, response) => {
+app.get("/api/v1/favorites/", (request, response) => {
     return response.status(200).json(app.locals.usersFavorites);
 });
 
+app.get("/api/v1/favorites/:id", (request, response) => {
+	const userID = request.params.id;
+	const usersFavorites = app.locals.usersFavorites.find(user => user.user_id === Number(userID))
+    return response.status(200).json(usersFavorites);
+});
+
 app.post("/api/v1/favorites", (request, response) => {
-    const {userID, movieID} = request.body
-    const user = app.locals.usersFavorites.find(user => user.userID === Number(userID));
-    user.favorites.push(Number(movieID))
+    const { userID, movieID } = request.body
+	const user = app.locals.usersFavorites.find(user => user.user_id === Number(userID));
+	if(!user) {
+		return response.sendStatus(404);
+	}
+    user.movie_ids.push(Number(movieID));
     return response.status(200).json(app.locals.usersFavorites);
 });
 
