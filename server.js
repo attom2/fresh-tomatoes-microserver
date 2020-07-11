@@ -3,17 +3,17 @@ const app = express();
 const cors = require('cors');
 const { request, response } = require('express');
 
-app.locals.comments = {
+app.locals.allComments = {
 	comments: [
 		{ 475430: [		
-			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', data: Date.now()},
-			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', data: Date.now()},
-			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', data: Date.now()}
+			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', date: 1519211811670}
 		]},
 		{ 338762: [		
-			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', data: Date.now()},
-			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', data: Date.now()},
-			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', data: Date.now()}
+			{user_id: 60, comment: 'This movie was awesome. I love Leo.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 60, comment: 'Kept me on the edge of my seat. 98 minutes of wow.', user_name: 'Charlie', date: 1519211811670},
+			{user_id: 40, comment: 'Didn\t care for it', user_name: 'Bob', date: 1519211811670}
 		]},
 	]
 }
@@ -45,16 +45,15 @@ app.get("/api/v1/comments", (request, response) => {
 
 app.get("/api/v1/comments/:movie_id", (request, response) => {
 	const movieID = parseInt(request.params.movie_id);
-	const commentMovieKeys = Object.values(app.locals.comments.comments);
 	
-	const foundMovie = app.locals.comments.comments.find(movie => {
+	const foundMovie = app.locals.allComments.comments.find(movie => {
 		let movieKey = parseInt(Object.keys(movie)[0])
 		return movieKey === movieID
 	});
 
 	if (!foundMovie) response.sendStatus(404);
 
-	response.status(205).json(foundMovie);
+	response.status(200).json(foundMovie);
 });
 
 app.listen(app.get('port'), () => {
