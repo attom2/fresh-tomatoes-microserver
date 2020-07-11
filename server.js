@@ -62,6 +62,14 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 	const date = Date.now();
 	const addedMovie = { user_id, comment, user_name, date };
 
+	for (let requiredParameter of ['comment', 'user_id', 'user_name', 'movie_id']) {
+		if (!request.body[requiredParameter]) {
+			return response.status(422).send({
+				error: `Expected format: {user_id: <integer>, comment: <string>, user_name: <string>, movie_id: <integer>}. Missing a required parameter of ${requiredParameter}!`
+			})
+		}
+	}
+	
 	const foundMovie = app.locals.allComments.comments.find(movie => {
 		const movieKey = parseInt(Object.keys(movie)[0])
 		return movieKey === movieID
@@ -71,7 +79,7 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 	foundMovieValue.push(addedMovie);
 
 	return response.status(200).json(addedMovie);
-})
+}) //setup if no movie comments exist yet, create the movie key + array value...
 
 app.listen(app.get('port'), () => {
     console.log(`We are now listening on port ${app.get('port')}`)
