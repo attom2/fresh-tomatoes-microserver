@@ -56,6 +56,23 @@ app.get("/api/v1/comments/:movie_id", (request, response) => {
 	response.status(200).json(foundMovie);
 });
 
+app.post("/api/v1/comments/:movie_id", (request, response) => {
+	const {movie_id, user_id, user_name, comment} = request.body;
+	const movieID = parseInt(movie_id);
+	const date = Date.now();
+	const addedMovie = { user_id, comment, user_name, date };
+
+	const foundMovie = app.locals.allComments.comments.find(movie => {
+		const movieKey = parseInt(Object.keys(movie)[0])
+		return movieKey === movieID
+	});
+
+	const foundMovieValue = Object.values(foundMovie);
+	foundMovieValue.push(addedMovie);
+
+	return response.status(200).json(addedMovie);
+})
+
 app.listen(app.get('port'), () => {
     console.log(`We are now listening on port ${app.get('port')}`)
 })
