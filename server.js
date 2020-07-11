@@ -18,11 +18,11 @@ app.locals.allComments = {
 	]
 }
 
-app.locals.test = []
 app.locals.usersFavorites = [
   { user_id: 60, movie_ids: [475430, 451184, 554993, 603] },
   { user_id: 10, movie_ids: [603] },
 ]; 
+
 app.use(express.json());
 app.use(cors());
 
@@ -33,19 +33,21 @@ app.get("/api/v1/favorites/", (request, response) => {
 });
 
 app.patch("/api/v1/favorites/", (request, response) => {
-    const { user_id, movie_id }  = request.body;
-	const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
+	const { user_id, movie_id }  = request.body;
+	const movieID = Number(movie_id)
+	const userID = Number(user_id)
+	const user = app.locals.usersFavorites.find(user => user.user_id === userID);
 	if(!user) {
 		return response.status(404).send({
-			error: `User ${Number(user_id)} not found. Expected format: {user_id: <number>, movie_id: <number> }!`,
+			error: `User ${userID} not found. Expected format: {user_id: <number>, movie_id: <number> }!`,
 		});
-	} else if (user.movie_ids.includes(Number(movie_id))) {
-		const indexToDelete = user.movie_ids.indexOf(Number(movie_id));
+	} else if (user.movie_ids.includes(movieID)) {
+		const indexToDelete = user.movie_ids.indexOf(movieID);
 		user.movie_ids.splice(indexToDelete, 1);
 		return response.status(200).json(user.movie_ids);
-	} else if (!user.movie_ids.includes(Number(movie_id))) {
+	} else if (!user.movie_ids.includes(movieID)) {
 		return response.status(404).send({
-			error: `User ${Number(user_id)} has not favorited the movie with movie_id ${movie_id}. Expected format: {user_id: <number>, movie_id: <number> }!`,
+			error: `User ${userID} has not favorited the movie with movie_id ${movie_id}. Expected format: {user_id: <number>, movie_id: <number> }!`,
 		});
 	}
 });
@@ -67,18 +69,6 @@ app.post("/api/v1/favorites", (request, response) => {
 		user.movie_ids.push(Number(movie_id));
 	}
     return response.status(200).json(user.movie_ids);
-});
-
-app.get("api/v1/asdf", (request, response) => {
-	// const { user_id, movie_id }  = request.body;
-	// const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
-	// if(!user) {
-	// 	return response.sendStatus(404);
-	// } else if (user.movie_ids.includes(Number(movie_id))) {
-	// 	const indexToDelete = user.movie_ids.indexOf(movie_id);
-	// 	user.movie_id.splice(indexToDelete, i);
-	// }
-    return response.status(200).json(app.locals.usersFavorites);
 });
 
 app.get("/api/v1/comments", (request, response) => {
