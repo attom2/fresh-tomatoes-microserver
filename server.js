@@ -36,13 +36,18 @@ app.patch("/api/v1/favorites/", (request, response) => {
     const { user_id, movie_id }  = request.body;
 	const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
 	if(!user) {
-		return response.sendStatus(404);
+		return response.status(404).send({
+			error: `User ${Number(user_id)} not found. Expected format: {user_id: <number>, movie_id: <number> }!`,
+		});
 	} else if (user.movie_ids.includes(Number(movie_id))) {
 		const indexToDelete = user.movie_ids.indexOf(Number(movie_id));
 		user.movie_ids.splice(indexToDelete, 1);
 		return response.status(200).json(user.movie_ids);
+	} else if (!user.movie_ids.includes(Number(movie_id))) {
+		return response.status(404).send({
+			error: `User ${Number(user_id)} has not favorited the movie with movie_id ${movie_id}. Expected format: {user_id: <number>, movie_id: <number> }!`,
+		});
 	}
-
 });
 
 app.get("/api/v1/favorites/:id", (request, response) => {
@@ -55,7 +60,9 @@ app.post("/api/v1/favorites", (request, response) => {
     const { user_id, movie_id } = request.body;
 	const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
 	if(!user) {
-		return response.sendStatus(404);
+		return response.status(404).send({
+			error: `Expected format: {user_id: <number>, movie_id: <number> }!`,
+		});
 	} else if (!user.movie_ids.includes(Number(movie_id))) {
 		user.movie_ids.push(Number(movie_id));
 	}
