@@ -32,6 +32,19 @@ app.get("/api/v1/favorites/", (request, response) => {
     return response.status(200).json(app.locals.usersFavorites);
 });
 
+app.patch("/api/v1/favorites/", (request, response) => {
+    const { user_id, movie_id }  = request.body;
+	const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
+	if(!user) {
+		return response.sendStatus(404);
+	} else if (user.movie_ids.includes(Number(movie_id))) {
+		const indexToDelete = user.movie_ids.indexOf(Number(movie_id));
+		user.movie_ids.splice(indexToDelete, 1);
+		return response.status(200).json(user.movie_ids);
+	}
+
+});
+
 app.get("/api/v1/favorites/:id", (request, response) => {
 	const userID = request.params.id;
 	const usersFavorites = app.locals.usersFavorites.find(user => user.user_id === Number(userID))
@@ -39,14 +52,26 @@ app.get("/api/v1/favorites/:id", (request, response) => {
 });
 
 app.post("/api/v1/favorites", (request, response) => {
-    const { user_id, movie_id } = request.body
+    const { user_id, movie_id } = request.body;
 	const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
 	if(!user) {
 		return response.sendStatus(404);
 	} else if (!user.movie_ids.includes(Number(movie_id))) {
-		user.movie_ids.push(Number(movie_id))
+		user.movie_ids.push(Number(movie_id));
 	}
     return response.status(200).json(user.movie_ids);
+});
+
+app.get("api/v1/asdf", (request, response) => {
+	// const { user_id, movie_id }  = request.body;
+	// const user = app.locals.usersFavorites.find(user => user.user_id === Number(user_id));
+	// if(!user) {
+	// 	return response.sendStatus(404);
+	// } else if (user.movie_ids.includes(Number(movie_id))) {
+	// 	const indexToDelete = user.movie_ids.indexOf(movie_id);
+	// 	user.movie_id.splice(indexToDelete, i);
+	// }
+    return response.status(200).json(app.locals.usersFavorites);
 });
 
 app.get("/api/v1/comments", (request, response) => {
