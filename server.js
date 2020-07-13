@@ -112,23 +112,20 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 		}
 	}
 
-	let foundMovie;
-	const currentCommentKeys = app.locals.allComments.comments.map(movie => parseInt(Object.keys(movie)));
+	let currentCommentKeys = app.locals.allComments.comments.map(movie => parseInt(Object.keys(movie)));
 
-	if (currentCommentKeys.includes(movieID)) {
-		foundMovie = app.locals.allComments.comments.find(movie => {
-			const movieKey = parseInt(Object.keys(movie)[0])
-			return movieKey === movieID
-		})
-		const foundMovieIndex = app.locals.allComments.comments.indexOf(foundMovie);
-		const foundMovieKey = Object.keys(foundMovie);
-		app.locals.allComments.comments[foundMovieIndex][foundMovieKey].push(addedMovie);
-		return response.status(200).json(app.locals.allComments.comments[foundMovieIndex][foundMovieKey]);
-	} else {
-		app.locals.allComments.comments[movieID] = [addedMovie];
-		foundMovie = app.locals.allComments.comments[movieID];
-		return response.status(200).json(foundMovie);
-	}
+	if (!currentCommentKeys.includes(movieID)) app.locals.allComments.comments.push({[movieID]: [addedMovie]});
+	
+	const foundMovie = app.locals.allComments.comments.find(movie => {
+		const movieKey = parseInt(Object.keys(movie)[0])
+		return movieKey === movieID
+	})
+	const foundMovieIndex = app.locals.allComments.comments.indexOf(foundMovie);
+	const foundMovieKey = Object.keys(foundMovie);
+
+	if (currentCommentKeys.includes(movieID)) app.locals.allComments.comments[foundMovieIndex][foundMovieKey].push(addedMovie);
+
+	return response.status(200).json(app.locals.allComments.comments[foundMovieIndex][foundMovieKey]);
 })
 
 app.listen(app.get('port'), () => {
