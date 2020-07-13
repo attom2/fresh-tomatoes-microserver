@@ -113,7 +113,7 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 	}
 
 	let currentCommentKeys = app.locals.allComments.comments.map(movie => parseInt(Object.keys(movie)));
-	
+
 	if (!currentCommentKeys.includes(movieID)) app.locals.allComments.comments.push({[movieID]: [addedMovie]});
 	
 	const foundMovie = app.locals.allComments.comments.find(movie => {
@@ -127,7 +127,6 @@ app.post("/api/v1/comments/:movie_id", (request, response) => {
 
 	return response.status(200).json(app.locals.allComments.comments[foundMovieIndex][foundMovieKey]);
 })
-
 
 app.listen(app.get('port'), () => {
     console.log(`We are now listening on port ${app.get('port')}`)
